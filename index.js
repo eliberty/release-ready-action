@@ -65,7 +65,7 @@ async function run() {
       return;
     }
 
-    const regExp = /(RP|WR|API|TS|BB|BP|DS)-[\d]{1,5}/;
+    const regExp = /(RP|WR|API|TS|BB|BP|DS|DP)-[\d]{1,5}/;
     if (!regExp.exec(context.payload.pull_request.body)) {
       throw new Error(":x: release-ready: body must contains at least one JIRA reference.");
     }
