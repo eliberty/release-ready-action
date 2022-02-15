@@ -65,7 +65,7 @@ async function run() {
       return;
     }
 
-    const regExp = /(RP|WR|API|TS|BB|BP|DS|DP)-[\d]{1,5}/;
+    const regExp = /(RP|WR|API|TS|BB|BP|DS|DP|TRI|BK)-[\d]{1,5}/;
     if (!regExp.exec(context.payload.pull_request.body)) {
       throw new Error(":x: release-ready: body must contains at least one JIRA reference.");
     }
@@ -108,17 +108,6 @@ async function run() {
       }
     });
 
-    if (
-      !lastReviews.length ||
-      lastReviews.filter(review => "APPROVED" !== review.state).length
-    ) {
-      const waitingReviewers = lastReviews
-        .filter(review => "APPROVED" !== review.state)
-        .map(review => review.name);
-      core.info(`Reviewers: ${waitingReviewers}`);
-      throw new Error(":bulb: release-ready: this PR is not fully approved yet.");
-    }
-
     let counter = 0;
 
     /*const payload = JSON.stringify(context.payload, undefined, 2)
@@ -142,6 +131,17 @@ async function run() {
 
     if (!counter) {
       throw new Error(":bulb: release-ready: this PR must be reviewed by at least 1 lead dev.");
+    }
+
+    if (
+      !lastReviews.length ||
+      lastReviews.filter(review => "APPROVED" !== review.state).length
+    ) {
+      const waitingReviewers = lastReviews
+        .filter(review => "APPROVED" !== review.state)
+        .map(review => review.name);
+      core.info(`Reviewers: ${waitingReviewers}`);
+      throw new Error(":bulb: release-ready: this PR is not fully approved yet.");
     }
 
     if (requiredChecks) {
@@ -187,6 +187,8 @@ async function run() {
     await ghAddLabels(octokit, [label]);
   } catch (e) {
     await removeLabel(octokit, label);
+
+
     await ghCreateComment(octokit, e.message);
     core.info(e.message);
   }
