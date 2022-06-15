@@ -108,7 +108,7 @@ async function run() {
       }
     });
 
-    let counter = 0;
+    // let counter = 0;
 
     /*const payload = JSON.stringify(context.payload, undefined, 2)
     console.log(`The event payload: ${payload}`);*/
@@ -119,6 +119,7 @@ async function run() {
       }
     }
 
+    /*
     await asyncForEach(lastReviews, async (review) => {
       const reviewer_url = `${context.payload.organization.url}/teams/${leaddevTeamId}/members/${review.name}`;
       try {
@@ -132,6 +133,7 @@ async function run() {
     if (!counter) {
       throw new Error(":bulb: release-ready: this PR must be reviewed by at least 1 lead dev.");
     }
+    */
 
     if (
       !lastReviews.length ||
